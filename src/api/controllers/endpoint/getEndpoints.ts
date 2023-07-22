@@ -3,18 +3,29 @@ import { Request, Response } from "express";
 import Endpoint from "src/db/models/Endpoint.model";
 
 import { IEndpointDTO } from "./endpoint.dto";
+import { SUCCESS_CODE, respondSuccess } from "src/utils/responseManager.util";
+import { AddressValidation } from "src/utils/validation.util";
+
+interface IRequestHeaderDTO {
+  userId: string;
+}
+const RequestBodyDTO = Joi.object<IRequestHeaderDTO, true>({
+  userId: AddressValidation.required(),
+});
 
 interface ResponseDTO {
   endpoints: IEndpointDTO[];
 }
 
 const getEndpoints = async (req: Request, res: Response) => {
-  const { userId } = req.headers;
+  const { userId }: IRequestHeaderDTO = await RequestBodyDTO.validateAsync(
+    req?.headers
+  );
 
   const endpoints = (
     await Endpoint.findAll({
       where: {
-        // userId: userId,
+        userId,
       },
     })
   ).map((a) => a.toJSON());
@@ -31,7 +42,8 @@ const getEndpoints = async (req: Request, res: Response) => {
       })
     ),
   };
-  res.status(200).send(response);
+
+  return respondSuccess(res, SUCCESS_CODE.OK, response);
 };
 
 export default getEndpoints;

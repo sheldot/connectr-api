@@ -5,6 +5,7 @@ import User from "src/db/models/User.model";
 import { AddressValidation } from "src/utils/validation.util";
 
 import { IUserDTO } from "./user.dto";
+import { SUCCESS_CODE, respondSuccess } from "src/utils/responseManager.util";
 
 interface IRequestBodyDTO {
   userAddress: string;
@@ -37,7 +38,7 @@ const createUser = async (req: Request, res: Response) => {
     },
   };
 
-  res.status(200).send(response);
+  return respondSuccess(res, SUCCESS_CODE.OK, response);
 };
 
 export default createUser;

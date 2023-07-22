@@ -5,14 +5,39 @@ import Field from "src/db/models/Field.model";
 
 import { IEndpointFieldDTO, IFieldDTO, IProductDTO } from "./endpointField.dto";
 import Product from "src/db/models/Product.model";
+import {
+  ERROR_CODE,
+  SUCCESS_CODE,
+  respondError,
+  respondSuccess,
+} from "src/utils/responseManager.util";
+import Joi from "joi";
+import { AddressValidation, UuidValidation } from "src/utils/validation.util";
+
+interface IRequestHeaderDTO {
+  userId: string;
+}
+const RequestHeaderDTO = Joi.object<IRequestHeaderDTO, true>({
+  userId: AddressValidation.required(),
+});
+
+interface IRequestParamsDTO {
+  endpointId: string;
+}
+const RequestParamsDTO = Joi.object<IRequestParamsDTO, true>({
+  endpointId: UuidValidation.required(),
+});
 
 interface ResponseDTO {
   endpointFields: IEndpointFieldDTO[];
 }
 
 const getEndpointFields = async (req: Request, res: Response) => {
-  const { endpointId } = req.params;
-  const { userId } = req.headers;
+  const { userId }: IRequestHeaderDTO = await RequestHeaderDTO.validateAsync(
+    req?.headers
+  );
+  const { endpointId }: IRequestParamsDTO =
+    await RequestParamsDTO.validateAsync(req?.params);
 
   try {
     const endpointFieldIds: any[] = [];
@@ -74,10 +99,10 @@ const getEndpointFields = async (req: Request, res: Response) => {
       ),
     };
 
-    res.status(200).send(response);
+    return respondSuccess(res, SUCCESS_CODE.OK, response);
   } catch (err) {
     console.log(err);
-    res.status(500).send(err);
+    return respondError(res, ERROR_CODE.INTERNAL_ERROR, JSON.stringify(err));
   }
 };
 

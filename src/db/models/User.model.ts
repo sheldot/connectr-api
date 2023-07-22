@@ -74,13 +74,13 @@ export default class User extends Model<
   static async getOneByAddress(
     userAddress: string
   ): Promise<IUserAttributes | null> {
-    const chain = await this.findOne({
+    const user = await this.findOne({
       where: {
         address: userAddress,
       },
     });
 
-    return chain ? chain.toJSON() : null;
+    return user ? user.toJSON() : null;
   }
 
   static async validateAndCreate(
