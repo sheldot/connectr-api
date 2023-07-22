@@ -81,6 +81,8 @@ const createAction = async (req: Request, res: Response) => {
   const parsedActionPayload = JSON.parse(actionPayload || "{}");
   console.log("\n-=-=- parsedActionPayload");
   console.log(parsedActionPayload);
+  console.log(`\n-=-=- "type" in obj`);
+  console.log("type" in parsedActionPayload);
   console.log(
     "\n-=-=- checkActionTypePayload[actionType](parsedActionPayload)"
   );
