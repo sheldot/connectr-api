@@ -12,22 +12,13 @@ import {
 } from "sequelize-typescript";
 
 import { FieldValidation, UuidValidation } from "../../utils/validation.util";
-import {
-  DexFieldEnum,
-  LendingFieldEnum,
-  MiscFieldEnum,
-  TokenFieldEnum,
-} from "../../utils/enum.util";
+import { FieldEnum } from "../../utils/enum.util";
 
 import { IBaseAttributes } from "../IBaseAttributes";
 import Product from "./Product.model";
 
 export interface IFieldCreationAttributes {
-  fieldNameEnum:
-    | DexFieldEnum
-    | LendingFieldEnum
-    | MiscFieldEnum
-    | TokenFieldEnum;
+  fieldNameEnum: FieldEnum;
 
   // References
   productId: string;

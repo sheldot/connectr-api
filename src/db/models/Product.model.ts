@@ -12,22 +12,13 @@ import {
 } from "sequelize-typescript";
 
 import { ProductValidation, UuidValidation } from "../../utils/validation.util";
-import {
-  DexProductEnum,
-  LendingProductEnum,
-  MiscProductEnum,
-  TokenProductEnum,
-} from "../../utils/enum.util";
+import { ProductEnum } from "../../utils/enum.util";
 
 import { IBaseAttributes } from "../IBaseAttributes";
 import Source from "./Source.model";
 
 export interface IProductCreationAttributes {
-  productNameEnum:
-    | DexProductEnum
-    | LendingProductEnum
-    | MiscProductEnum
-    | TokenProductEnum;
+  productNameEnum: ProductEnum;
 
   // References
   sourceId: string;
@@ -41,7 +32,7 @@ export interface IProductAttributes
   extends IBaseAttributes,
     IProductCreationAttributes {}
 
-export const SourceCreationAttributesSchema =
+export const ProductCreationAttributesSchema =
   Joi.object<IProductCreationAttributes>({
     // Variables
     productNameEnum: ProductValidation.required(),

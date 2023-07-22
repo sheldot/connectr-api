@@ -1,13 +1,15 @@
 import { Router } from "express";
 
-import randomRouter from "./routes/random.routes";
+import apiRouter from "./routes/api.routes";
+import apiFieldsRouter from "./routes/apiFields.routes";
 
-const apiRouter = () => {
+const coreRouter = () => {
   const appRouter = Router();
 
-  appRouter.use("/random", randomRouter);
+  appRouter.use("/api/:apiId/fields", apiFieldsRouter);
+  appRouter.use("/api", apiRouter);
 
   return appRouter;
 };
 
-export default apiRouter;
+export default coreRouter;

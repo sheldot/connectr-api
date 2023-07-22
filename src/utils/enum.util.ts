@@ -147,3 +147,19 @@ export const TokenFieldNames = {
   [TokenFieldEnum.PRICE]: "Price",
   [TokenFieldEnum.CIRCULATING_TOKEN_VOLUME]: "Amount of tokens in circulation",
 };
+
+export const ProductEnumSet = {
+  ...DexProductEnum,
+  ...LendingProductEnum,
+  ...MiscProductEnum,
+  ...TokenProductEnum,
+};
+export type ProductEnum = typeof ProductEnumSet;
+
+export const FieldEnumSet = {
+  ...DexFieldEnum,
+  ...LendingFieldEnum,
+  ...MiscFieldEnum,
+  ...TokenFieldEnum,
+};
+export type FieldEnum = typeof FieldEnumSet;

@@ -1,29 +1,25 @@
 import Joi from "joi";
 
 import {
-  DexFieldEnum,
-  DexProductEnum,
-  LendingFieldEnum,
-  LendingProductEnum,
-  MiscFieldEnum,
-  MiscProductEnum,
+  FieldEnumSet,
+  ProductEnumSet,
   SourceEnum,
-  TokenFieldEnum,
   TokenProductEnum,
 } from "./enum.util";
 
+export const HEX_REGEX = /^(0x|0X)?[a-fA-F0-9]+$/;
+
+export const AddressValidation = Joi.string()
+  .alphanum()
+  .length(42)
+  .pattern(HEX_REGEX, { name: "address" });
+
 export const FieldValidation = Joi.string().valid(
-  ...Object.values(DexFieldEnum),
-  ...Object.values(LendingFieldEnum),
-  ...Object.values(MiscFieldEnum),
-  ...Object.values(TokenFieldEnum)
+  ...Object.values(FieldEnumSet)
 );
 
 export const ProductValidation = Joi.string().valid(
-  ...Object.values(DexProductEnum),
-  ...Object.values(LendingProductEnum),
-  ...Object.values(MiscProductEnum),
-  ...Object.values(TokenProductEnum)
+  ...Object.values(ProductEnumSet)
 );
 
 export const SourceValidation = Joi.string().valid(
