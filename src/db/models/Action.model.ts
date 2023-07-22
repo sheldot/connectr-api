@@ -11,7 +11,7 @@ import {
   Table,
 } from "sequelize-typescript";
 
-import { OperatorEnum } from "src/utils/enum.util";
+import { ActionTypeEnum, OperatorEnum } from "src/utils/enum.util";
 import {
   ActionTypeValidation,
   AddressValidation,
@@ -25,9 +25,10 @@ import { IBaseAttributes } from "../IBaseAttributes";
 import Endpoint from "./Endpoint.model";
 
 export interface IActionCreationAttributes {
-  actionType: string;
+  actionType: ActionTypeEnum;
   actionPayload: string | null;
   address: string;
+  name: string;
   operator: OperatorEnum;
   threshold: string;
 
@@ -41,6 +42,7 @@ export type IActionUpdatingAttributes = Partial<
     | "address"
     | "actionType"
     | "actionPayload"
+    | "name"
     | "operator"
     | "threshold"
     | "endpointId"
@@ -57,6 +59,7 @@ export const ActionCreationAttributesSchema =
     actionPayload: SimpleStringValidation.optional(),
     actionType: ActionTypeValidation.required(),
     address: AddressValidation.required(),
+    name: SimpleStringValidation.required(),
     operator: OperatorValidation.required(),
     threshold: SimpleStringValidation.required(),
 
@@ -91,6 +94,10 @@ export default class Action extends Model<
   @AllowNull(false)
   @Column(DataType.STRING)
   address!: string;
+
+  @AllowNull(false)
+  @Column(DataType.STRING)
+  name!: string;
 
   @AllowNull(false)
   @Column(DataType.STRING)

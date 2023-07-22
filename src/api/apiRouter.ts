@@ -17,10 +17,10 @@ const coreRouter = () => {
   appRouter.get("/ping", ping);
   appRouter.use("/misc", miscRouter);
 
-  appRouter.use("/endpoint", actionRouter);
-  appRouter.use("/endpoint", endpointFieldsRouter);
-  appRouter.use("/endpoint", endpointRouter);
-  appRouter.use("/user", userRouter);
+  appRouter.use("/endpoints", actionRouter);
+  appRouter.use("/endpoints", endpointFieldsRouter);
+  appRouter.use("/endpoints", endpointRouter);
+  appRouter.use("/users", userRouter);
 
   return appRouter;
 };

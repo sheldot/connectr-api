@@ -3,7 +3,6 @@ import Joi from "joi";
 
 import Endpoint from "src/db/models/Endpoint.model";
 import EndpointField from "src/db/models/EndpointField.model";
-import User from "src/db/models/User.model";
 import {
   DexFieldEnum,
   DexProductEnum,
@@ -14,12 +13,7 @@ import {
   TokenFieldEnum,
   TokenProductEnum,
 } from "src/utils/enum.util";
-import {
-  ERROR_CODE,
-  SUCCESS_CODE,
-  respondError,
-  respondSuccess,
-} from "src/utils/responseManager.util";
+import { SUCCESS_CODE, respondSuccess } from "src/utils/responseManager.util";
 import {
   FieldValidation,
   ProductValidation,

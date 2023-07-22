@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import Joi from "joi";
 
 import Action from "src/db/models/Action.model";
+import Endpoint from "src/db/models/Endpoint.model";
 import {
   ERROR_CODE,
   SUCCESS_CODE,
@@ -12,7 +13,6 @@ import {
 import { validateUser } from "../interfaces.controllers";
 import { IActionDTO } from "./action.dto";
 import { UuidValidation } from "src/utils/validation.util";
-import Endpoint from "src/db/models/Endpoint.model";
 
 interface IRequestParamsDTO {
   endpointId: string;
@@ -55,6 +55,7 @@ const getActions = async (req: Request, res: Response) => {
         actionType,
         actionPayload,
         address,
+        name,
         operator,
         threshold,
         endpointId,
@@ -66,6 +67,7 @@ const getActions = async (req: Request, res: Response) => {
         actionType,
         actionPayload,
         address,
+        name,
         operator,
         threshold,
         endpointId,

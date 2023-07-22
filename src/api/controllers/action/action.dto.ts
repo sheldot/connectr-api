@@ -1,20 +1,19 @@
-import { OperatorEnum } from "src/utils/enum.util";
+import { ActionTypeEnum, OperatorEnum } from "src/utils/enum.util";
 
 export interface IActionDTO {
   createdAt: string;
   deletedAt?: string;
   updatedAt: string;
 
-  actionType: string;
+  id: string;
+
+  actionType: ActionTypeEnum;
   actionPayload: string | null;
   address: string;
+  name: string;
   operator: OperatorEnum;
   threshold: string;
 
   // References
   endpointId: string;
 }
-
-// export interface IActionWithFieldsDTO extends IActionDTO {
-//   fields: IActionFieldDTO[];
-// }

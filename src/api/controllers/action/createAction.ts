@@ -1,82 +1,125 @@
 import { Request, Response } from "express";
 import Joi from "joi";
 
-import Endpoint from "src/db/models/Endpoint.model";
-import EndpointField from "src/db/models/EndpointField.model";
-import { OperatorEnum } from "src/utils/enum.util";
+import Action from "src/db/models/Action.model";
+import {
+  ActionTypeEnum,
+  OperatorEnum,
+  checkActionTypePayload,
+} from "src/utils/enum.util";
 import { SUCCESS_CODE, respondSuccess } from "src/utils/responseManager.util";
 import {
+  ActionTypeValidation,
   AddressValidation,
   OperatorValidation,
   SimpleStringValidation,
+  UuidValidation,
 } from "src/utils/validation.util";
 
-import { IEndpointDTO } from "./endpoint.dto";
-
-interface IRequestHeaderDTO {
-  userId: string;
-}
-const RequestHeaderDTO = Joi.object<IRequestHeaderDTO, true>({
-  userId: AddressValidation.required(),
-});
-
-export interface IFieldToCreateDTO {
-  operator: OperatorEnum;
-  fieldId: string;
-  value: string;
-}
-const FieldToCreateDTO = Joi.object<IFieldToCreateDTO, true>({
-  operator: OperatorValidation.required(),
-  fieldId: SimpleStringValidation.required(),
-  value: SimpleStringValidation.required(),
-});
+import { IActionDTO } from "./action.dto";
+import { validateUser } from "../interfaces.controllers";
+import Endpoint from "src/db/models/Endpoint.model";
 
 interface IRequestBodyDTO {
+  actionType: ActionTypeEnum;
+  actionPayload: string | null;
+  address: string;
   name: string;
-  fieldsToCreate: IFieldToCreateDTO[];
+  operator: OperatorEnum;
+  threshold: string;
 }
 const RequestBodyDTO = Joi.object<IRequestBodyDTO, true>({
+  actionType: ActionTypeValidation.required(),
+  actionPayload: SimpleStringValidation.optional(),
+  address: AddressValidation.required(),
   name: SimpleStringValidation.required(),
-  fieldsToCreate: Joi.array().items(FieldToCreateDTO).required(),
+  operator: OperatorValidation.required(),
+  threshold: SimpleStringValidation.required(),
+});
+
+interface IRequestParamsDTO {
+  endpointId: string;
+}
+const RequestParamsDTO = Joi.object<IRequestParamsDTO, true>({
+  endpointId: UuidValidation.required(),
 });
 
 interface ResponseDTO {
-  endpoint: IEndpointDTO;
+  action: IActionDTO;
 }
 
-const createEndpoint = async (req: Request, res: Response) => {
-  const { userId }: IRequestHeaderDTO = await RequestHeaderDTO.validateAsync(
-    req?.headers
+const createAction = async (req: Request, res: Response) => {
+  const user = await validateUser(req, res);
+  const { endpointId }: IRequestParamsDTO =
+    await RequestParamsDTO.validateAsync(req?.params);
+
+  const {
+    actionType,
+    actionPayload,
+    address,
+    name,
+    operator,
+    threshold,
+  }: IRequestBodyDTO = await RequestBodyDTO.validateAsync(req?.body);
+
+  const endpoint = await Endpoint.getOneByUser(endpointId, user.id);
+
+  if (!endpoint) {
+    throw new Error("Endpoint does not exist");
+  }
+
+  // Check that the action payload is valid for this action type
+  console.log("\n-=-=- actionPayload");
+  console.log(actionPayload);
+
+  try {
+    JSON.parse(actionPayload || "{}");
+  } catch (e) {
+    throw new Error("Action payload is not valid JSON");
+  }
+
+  const parsedActionPayload = JSON.parse(actionPayload || "{}");
+  console.log("\n-=-=- parsedActionPayload");
+  console.log(parsedActionPayload);
+  console.log(
+    "\n-=-=- checkActionTypePayload[actionType](parsedActionPayload)"
   );
+  console.log(checkActionTypePayload[actionType](parsedActionPayload));
 
-  const { name: endpointName, fieldsToCreate }: IRequestBodyDTO =
-    await RequestBodyDTO.validateAsync(req?.body);
+  if (!checkActionTypePayload[actionType](parsedActionPayload)) {
+    throw new Error("Action payload does not match action type");
+  }
 
-  const createdEndpoint = await Endpoint.validateAndCreate({
-    userId,
-    name: endpointName,
+  const createdAction = await Action.validateAndCreate({
+    actionType,
+    actionPayload,
+    address,
+    name,
+    operator,
+    threshold,
+    endpointId,
   });
 
-  const createdEndpointFields = await Promise.all(
-    fieldsToCreate.map((currentFieldToCreate) =>
-      EndpointField.validateAndCreate({
-        endpointId: createdEndpoint.id,
-        fieldId: string,
-      })
-    )
-  );
-
   const response: ResponseDTO = {
-    endpoint: {
-      createdAt: createdAt.toISOString(),
-      deletedAt: deletedAt?.toISOString(),
-      updatedAt: updatedAt.toISOString(),
-      id,
-      address,
+    action: {
+      createdAt: createdAction.createdAt.toISOString(),
+      deletedAt: createdAction.deletedAt?.toISOString(),
+      updatedAt: createdAction.updatedAt.toISOString(),
+
+      id: createdAction.id,
+
+      actionType: createdAction.actionType,
+      actionPayload: createdAction.actionPayload,
+      address: createdAction.address,
+      name: createdAction.name,
+      operator: createdAction.operator,
+      threshold: createdAction.threshold,
+
+      endpointId: createdAction.endpointId,
     },
   };
 
   return respondSuccess(res, SUCCESS_CODE.OK, response);
 };
 
-export default createEndpoint;
+export default createAction;
