@@ -1,30 +1,30 @@
 import { Request, Response } from "express";
 
-import ApiField from "src/db/models/ApiField.model";
+import EndpointField from "src/db/models/EndpointField.model";
 import Field from "src/db/models/Field.model";
 
-import { IApiFieldDTO, IFieldDTO, IProductDTO } from "./apiField.dto";
+import { IEndpointFieldDTO, IFieldDTO, IProductDTO } from "./endpointField.dto";
 import Product from "src/db/models/Product.model";
 
 interface ResponseDTO {
-  apiFields: IApiFieldDTO[];
+  endpointFields: IEndpointFieldDTO[];
 }
 
-const getApiFields = async (req: Request, res: Response) => {
-  const { apiId } = req.params;
+const getEndpointFields = async (req: Request, res: Response) => {
+  const { endpointId } = req.params;
   const { userId } = req.headers;
 
   try {
-    const apiFieldIds: any[] = [];
-    const apiFields = (
-      await ApiField.findAll({
+    const endpointFieldIds: any[] = [];
+    const endpointFields = (
+      await EndpointField.findAll({
         where: {
           // userId: userId,
-          apiId,
+          endpointId,
         },
       })
     ).map((a) => {
-      apiFieldIds.push(a.id);
+      endpointFieldIds.push(a.id);
       return a.toJSON();
     });
 
@@ -32,7 +32,7 @@ const getApiFields = async (req: Request, res: Response) => {
     const fields = (
       await Field.findAll({
         where: {
-          id: { $in: apiFieldIds },
+          id: { $in: endpointFieldIds },
         },
       })
     ).map((a) => a.toJSON());
@@ -60,13 +60,13 @@ const getApiFields = async (req: Request, res: Response) => {
     });
 
     const response: ResponseDTO = {
-      apiFields: apiFields.map(
-        ({ createdAt, deletedAt, updatedAt, id, apiId, fieldId }) => ({
+      endpointFields: endpointFields.map(
+        ({ createdAt, deletedAt, updatedAt, id, endpointId, fieldId }) => ({
           createdAt: createdAt.toISOString(),
           deletedAt: deletedAt?.toISOString(),
           updatedAt: updatedAt.toISOString(),
           id,
-          apiId,
+          endpointId,
           fieldId,
           field: fieldMap[fieldId],
           product: productMap[fieldMap[fieldId].productId],
@@ -81,4 +81,4 @@ const getApiFields = async (req: Request, res: Response) => {
   }
 };
 
-export default getApiFields;
+export default getEndpointFields;

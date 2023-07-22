@@ -1,10 +1,9 @@
-export interface IApiDTO {
+export interface IUserDTO {
   createdAt: string;
   deletedAt?: string;
   updatedAt: string;
 
   id: string;
 
-  // References
-  userId: string;
+  address: string;
 }

@@ -14,7 +14,7 @@ export interface IFieldDTO {
   productId: string;
 }
 
-export interface IApiFieldDTO {
+export interface IEndpointFieldDTO {
   createdAt: string;
   deletedAt?: string;
   updatedAt: string;
@@ -22,7 +22,7 @@ export interface IApiFieldDTO {
   id: string;
 
   // References
-  apiId: string;
+  endpointId: string;
   fieldId: string;
 
   // filled in

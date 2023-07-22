@@ -70,4 +70,33 @@ export default class User extends Model<
 
     return address ? address.toJSON() : null;
   }
+
+  static async getOneByAddress(
+    userAddress: string
+  ): Promise<IUserAttributes | null> {
+    const chain = await this.findOne({
+      where: {
+        address: userAddress,
+      },
+    });
+
+    return chain ? chain.toJSON() : null;
+  }
+
+  static async validateAndCreate(
+    createdUserAttributes: IUserCreationAttributes
+  ): Promise<IUserAttributes> {
+    const validatedUserAttributes =
+      await UserCreationAttributesSchema.validateAsync(createdUserAttributes);
+
+    // Check if User already exists
+    const existingUser = await this.getOneByAddress(
+      validatedUserAttributes.address
+    );
+    if (existingUser) {
+      throw new Error("This user has already been created.");
+    }
+
+    return (await this.create(validatedUserAttributes)).toJSON();
+  }
 }
