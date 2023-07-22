@@ -1,6 +1,7 @@
 import Joi from "joi";
 
 import {
+  ActionTypeEnum,
   DexFieldEnum,
   DexProductEnum,
   LendingFieldEnum,
@@ -15,6 +16,10 @@ import {
 } from "./enum.util";
 
 export const HEX_REGEX = /^(0x|0X)?[a-fA-F0-9]+$/;
+
+export const ActionTypeValidation = Joi.string().valid(
+  ...Object.values(ActionTypeEnum)
+);
 
 export const AddressValidation = Joi.string()
   .alphanum()

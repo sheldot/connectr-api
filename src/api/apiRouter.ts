@@ -1,5 +1,6 @@
 import { Router } from "express";
 
+import actionRouter from "./routes/action.routes";
 import endpointRouter from "./routes/endpoint.routes";
 import endpointFieldsRouter from "./routes/endpointFields.routes";
 import userRouter from "./routes/user.routes";
@@ -16,6 +17,7 @@ const coreRouter = () => {
   appRouter.get("/ping", ping);
   appRouter.use("/misc", miscRouter);
 
+  appRouter.use("/endpoint", actionRouter);
   appRouter.use("/endpoint", endpointFieldsRouter);
   appRouter.use("/endpoint", endpointRouter);
   appRouter.use("/user", userRouter);

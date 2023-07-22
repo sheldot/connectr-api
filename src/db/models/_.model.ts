@@ -1,3 +1,4 @@
+import ActionModel from "./Action.model";
 import EndpointModel from "./Endpoint.model";
 import EndpointFieldModel from "./EndpointField.model";
 import DataPointModel from "./DataPoint.model";
@@ -7,6 +8,7 @@ import SourceModel from "./Source.model";
 import UserModel from "./User.model";
 
 const models = [
+  ActionModel,
   EndpointModel,
   EndpointFieldModel,
   DataPointModel,

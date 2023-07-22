@@ -32,7 +32,7 @@ interface ResponseDTO {
 }
 
 const getEndpointFields = async (req: Request, res: Response) => {
-  const { user_id } = await validateUser(req);
+  const { userAddress } = await validateUser(req);
   const { endpointId }: IRequestParamsDTO =
     await RequestParamsDTO.validateAsync(req?.params);
 

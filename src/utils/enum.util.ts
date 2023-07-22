@@ -1,3 +1,7 @@
+export enum ActionTypeEnum {
+  TRANSFER = "TRANSFER",
+}
+
 export enum OperatorEnum {
   GREATER_THAN = "GREATER_THAN",
   LESS_THAN = "LESS_THAN",
@@ -162,25 +166,11 @@ export const TokenProductNames = {
 export enum TokenFieldEnum {
   PRICE = "PRICE",
   CIRCULATING_TOKEN_VOLUME = "CIRCULATING_TOKEN_VOLUME",
+  COUNT_TRANSACTIONS = "COUNT_TRANSACTIONS",
 }
 
 export const TokenFieldNames = {
   [TokenFieldEnum.PRICE]: "Price",
   [TokenFieldEnum.CIRCULATING_TOKEN_VOLUME]: "Amount of tokens in circulation",
+  [TokenFieldEnum.COUNT_TRANSACTIONS]: "Transaction count",
 };
-
-// export const ProductEnumSet = {
-//   ...DexProductEnum,
-//   ...LendingProductEnum,
-//   ...MiscProductEnum,
-//   ...TokenProductEnum,
-// };
-// export type ProductEnum = typeof ProductEnumSet;
-
-// export const FieldEnumSet = {
-//   ...DexFieldEnum,
-//   ...LendingFieldEnum,
-//   ...MiscFieldEnum,
-//   ...TokenFieldEnum,
-// };
-// export type FieldEnum = typeof FieldEnumSet;

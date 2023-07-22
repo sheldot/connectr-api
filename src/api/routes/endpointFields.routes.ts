@@ -6,6 +6,4 @@ const endpointRouter = Router();
 
 endpointRouter.get("/:endpointId/fields", getEndpointFields);
 
-// endpointRouter.post("/", createEndpoint);
-
 export default endpointRouter;

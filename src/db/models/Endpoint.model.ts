@@ -83,6 +83,26 @@ export default class Endpoint extends Model<
     return endpoint ? endpoint.toJSON() : null;
   }
 
+  static async getOneByUser(
+    id: string,
+    userAddress: string
+  ): Promise<IEndpointAttributes | null> {
+    const userObj = await User.getOneByAddress(userAddress);
+
+    if (!userObj) {
+      throw new Error("User not found");
+    }
+
+    const endpoint = await this.findOne({
+      where: {
+        id,
+        userId: userObj.id,
+      },
+    });
+
+    return endpoint ? endpoint.toJSON() : null;
+  }
+
   static async validateAndCreate(
     createdEndpointAttributes: IEndpointCreationAttributes
   ): Promise<IEndpointAttributes> {
