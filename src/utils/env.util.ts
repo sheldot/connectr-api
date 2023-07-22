@@ -31,7 +31,7 @@ interface IEnvConfig {
   db: IDatabaseConfig;
 }
 
-const isProd = process.env.NODE_ENV === "production";
+const isProd = process.env.NODE_ENV === "pro";
 
 const configSet: IEnvConfig = {
   env: "development",
