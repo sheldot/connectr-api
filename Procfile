@@ -1,1 +1,1 @@
-web: ts-node -r tsconfig-paths/register ./index.ts
+web: npm start
