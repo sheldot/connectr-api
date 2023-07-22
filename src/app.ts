@@ -18,9 +18,6 @@ const app = express();
 // console.log(genUuid());
 // console.log(genUuid());
 // console.log(genUuid());
-// console.log(genUuid());
-// console.log(genUuid());
-// console.log(genUuid());
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
