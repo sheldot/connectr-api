@@ -3,28 +3,39 @@ import Joi from "joi";
 
 import Endpoint from "src/db/models/Endpoint.model";
 import EndpointField from "src/db/models/EndpointField.model";
-import { SUCCESS_CODE, respondSuccess } from "src/utils/responseManager.util";
+import User from "src/db/models/User.model";
+import { FieldEnum, ProductEnum } from "src/utils/enum.util";
 import {
-  AddressValidation,
+  ERROR_CODE,
+  SUCCESS_CODE,
+  respondError,
+  respondSuccess,
+} from "src/utils/responseManager.util";
+import {
+  FieldValidation,
+  ProductValidation,
   SimpleStringValidation,
 } from "src/utils/validation.util";
 
 import { IEndpointWithFieldsDTO } from "./endpoint.dto";
+import { validateUser } from "../interfaces.controllers";
 
-interface IRequestHeaderDTO {
-  userId: string;
+interface IApiFieldSet {
+  fieldNameEnum: FieldEnum;
+  productNameEnum: ProductEnum;
 }
-const RequestHeaderDTO = Joi.object<IRequestHeaderDTO, true>({
-  userId: AddressValidation.required(),
-});
+const ApiFieldSetDTO = Joi.object<IApiFieldSet, true>({
+  fieldNameEnum: FieldValidation.required(),
+  productNameEnum: ProductValidation.required(),
+} as any);
 
 interface IRequestBodyDTO {
   name: string;
-  fieldsToCreate: string[];
+  fieldsToCreate: IApiFieldSet[];
 }
 const RequestBodyDTO = Joi.object<IRequestBodyDTO, true>({
   name: SimpleStringValidation.required(),
-  fieldsToCreate: Joi.array().items(SimpleStringValidation).required(),
+  fieldsToCreate: Joi.array().items(ApiFieldSetDTO).required(),
 });
 
 interface ResponseDTO {
@@ -32,23 +43,28 @@ interface ResponseDTO {
 }
 
 const createEndpoint = async (req: Request, res: Response) => {
-  const { userId }: IRequestHeaderDTO = await RequestHeaderDTO.validateAsync(
-    req?.headers
-  );
+  const { user_id } = await validateUser(req);
+
+  const user = await User.getOneByAddress(user_id);
+
+  if (!user) {
+    return respondError(res, ERROR_CODE.NOT_FOUND, "User does not exist");
+  }
 
   const { name: endpointName, fieldsToCreate }: IRequestBodyDTO =
     await RequestBodyDTO.validateAsync(req?.body);
 
   const createdEndpoint = await Endpoint.validateAndCreate({
     name: endpointName,
-    userId,
+    userId: user.id,
   });
 
   const createdEndpointFields = await Promise.all(
-    fieldsToCreate.map((fieldId) =>
-      EndpointField.validateAndCreate({
+    fieldsToCreate.map(({ fieldNameEnum, productNameEnum }) =>
+      EndpointField.validateAndCreateByFieldName({
         endpointId: createdEndpoint.id,
-        fieldId,
+        fieldName: fieldNameEnum,
+        productName: productNameEnum,
       })
     )
   );

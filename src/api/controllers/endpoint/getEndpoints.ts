@@ -1,32 +1,22 @@
 import { Request, Response } from "express";
-import Joi from "joi";
 
 import Endpoint from "src/db/models/Endpoint.model";
 import { SUCCESS_CODE, respondSuccess } from "src/utils/responseManager.util";
-import { AddressValidation } from "src/utils/validation.util";
 
+import { validateUser } from "../interfaces.controllers";
 import { IEndpointDTO } from "./endpoint.dto";
-
-interface IRequestHeaderDTO {
-  userId: string;
-}
-const RequestBodyDTO = Joi.object<IRequestHeaderDTO, true>({
-  userId: AddressValidation.required(),
-});
 
 interface ResponseDTO {
   endpoints: IEndpointDTO[];
 }
 
 const getEndpoints = async (req: Request, res: Response) => {
-  const { userId }: IRequestHeaderDTO = await RequestBodyDTO.validateAsync(
-    req?.headers
-  );
+  const { user_id } = await validateUser(req);
 
   const endpoints = (
     await Endpoint.findAll({
       where: {
-        userId,
+        userId: user_id,
       },
     })
   ).map((a) => a.toJSON());

@@ -1,10 +1,17 @@
 import Joi from "joi";
 
 import {
-  FieldEnumSet,
+  DexFieldEnum,
+  DexProductEnum,
+  // FieldEnumSet,
+  LendingFieldEnum,
+  LendingProductEnum,
+  MiscFieldEnum,
+  MiscProductEnum,
   OperatorEnum,
-  ProductEnumSet,
+  // ProductEnumSet,
   SourceEnum,
+  TokenFieldEnum,
   TokenProductEnum,
 } from "./enum.util";
 
@@ -16,7 +23,10 @@ export const AddressValidation = Joi.string()
   .pattern(HEX_REGEX, { name: "address" });
 
 export const FieldValidation = Joi.string().valid(
-  ...Object.values(FieldEnumSet)
+  ...Object.values(DexFieldEnum),
+  ...Object.values(LendingFieldEnum),
+  ...Object.values(MiscFieldEnum),
+  ...Object.values(TokenFieldEnum)
 );
 
 export const OperatorValidation = Joi.string().valid(
@@ -24,7 +34,10 @@ export const OperatorValidation = Joi.string().valid(
 );
 
 export const ProductValidation = Joi.string().valid(
-  ...Object.values(ProductEnumSet)
+  ...Object.values(DexProductEnum),
+  ...Object.values(LendingProductEnum),
+  ...Object.values(MiscProductEnum),
+  ...Object.values(TokenProductEnum)
 );
 
 export const SourceValidation = Joi.string().valid(

@@ -11,7 +11,13 @@ import {
   Table,
 } from "sequelize-typescript";
 
-import { UuidValidation } from "../../utils/validation.util";
+import { FieldEnum, ProductEnum } from "src/utils/enum.util";
+
+import {
+  FieldValidation,
+  ProductValidation,
+  UuidValidation,
+} from "../../utils/validation.util";
 
 import { IBaseAttributes } from "../IBaseAttributes";
 import Endpoint from "./Endpoint.model";
@@ -22,14 +28,6 @@ export interface IEndpointFieldCreationAttributes {
   endpointId: string;
   fieldId: string;
 }
-
-export type IEndpointFieldUpdatingAttributes = Partial<
-  Pick<IEndpointFieldCreationAttributes, "endpointId" | "fieldId">
->;
-
-export interface IEndpointFieldAttributes
-  extends IBaseAttributes,
-    IEndpointFieldCreationAttributes {}
 
 export const EndpointFieldCreationAttributesSchema =
   Joi.object<IEndpointFieldCreationAttributes>({
@@ -43,6 +41,36 @@ export const EndpointFieldCreationAttributesSchema =
     .description(
       "The attributes for the creation of an endpoint field db object"
     );
+
+export interface IEndpointFieldCreationByNameAttributes {
+  fieldName: FieldEnum;
+  productName: ProductEnum;
+
+  // References
+  endpointId: string;
+}
+
+export const EndpointFieldCreationByNameAttributesSchema =
+  Joi.object<IEndpointFieldCreationByNameAttributes>({
+    // Variables
+    fieldName: FieldValidation.required(),
+    productName: ProductValidation.required(),
+
+    // References
+    endpointId: UuidValidation.required(),
+  })
+    .meta({ className: "EndpointFieldCreationByNameAttributesSchema" })
+    .description(
+      "The attributes for the creation of an endpoint field db object"
+    );
+
+export type IEndpointFieldUpdatingAttributes = Partial<
+  Pick<IEndpointFieldCreationAttributes, "endpointId" | "fieldId">
+>;
+
+export interface IEndpointFieldAttributes
+  extends IBaseAttributes,
+    IEndpointFieldCreationAttributes {}
 
 @Table({
   tableName: "endpoint_fields",
@@ -95,5 +123,30 @@ export default class EndpointField extends Model<
       );
 
     return (await this.create(validatedEndpointFieldAttributes)).toJSON();
+  }
+
+  static async validateAndCreateByFieldName(
+    createdEndpointFieldAttributes: IEndpointFieldCreationByNameAttributes
+  ): Promise<IEndpointFieldAttributes> {
+    const validatedEndpointFieldAttributes =
+      await EndpointFieldCreationByNameAttributesSchema.validateAsync(
+        createdEndpointFieldAttributes
+      );
+
+    const fieldObj = await Field.getOneByName(
+      validatedEndpointFieldAttributes.productName,
+      validatedEndpointFieldAttributes.fieldName
+    );
+
+    if (!fieldObj) {
+      throw new Error("Field not found");
+    }
+
+    return (
+      await this.create({
+        endpointId: validatedEndpointFieldAttributes.endpointId,
+        fieldId: fieldObj?.id,
+      })
+    ).toJSON();
   }
 }

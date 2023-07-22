@@ -12,7 +12,7 @@ import {
 } from "sequelize-typescript";
 
 import { FieldValidation, UuidValidation } from "../../utils/validation.util";
-import { FieldEnum } from "../../utils/enum.util";
+import { FieldEnum, ProductEnum } from "../../utils/enum.util";
 
 import { IBaseAttributes } from "../IBaseAttributes";
 import Product from "./Product.model";
@@ -77,6 +77,26 @@ export default class Field extends Model<
 
   static async getOneById(id: string): Promise<IFieldAttributes | null> {
     const field = await this.findByPk(id);
+
+    return field ? field.toJSON() : null;
+  }
+
+  static async getOneByName(
+    productName: ProductEnum,
+    fieldName: FieldEnum
+  ): Promise<IFieldAttributes | null> {
+    const productObj = await Product.getOneByName(productName);
+
+    if (!productObj) {
+      throw new Error("Product not found");
+    }
+
+    const field = await this.findOne({
+      where: {
+        productId: productObj.id,
+        fieldNameEnum: fieldName,
+      },
+    });
 
     return field ? field.toJSON() : null;
   }

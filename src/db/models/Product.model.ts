@@ -80,4 +80,16 @@ export default class Product extends Model<
 
     return product ? product.toJSON() : null;
   }
+
+  static async getOneByName(
+    productName: ProductEnum
+  ): Promise<IProductAttributes | null> {
+    const product = await this.findOne({
+      where: {
+        productNameEnum: productName,
+      },
+    });
+
+    return product ? product.toJSON() : null;
+  }
 }

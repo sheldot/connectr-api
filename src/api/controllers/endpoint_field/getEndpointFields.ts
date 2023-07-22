@@ -10,20 +10,15 @@ import {
   respondError,
   respondSuccess,
 } from "src/utils/responseManager.util";
-import { AddressValidation, UuidValidation } from "src/utils/validation.util";
+import { UuidValidation } from "src/utils/validation.util";
+
+import { validateUser } from "../interfaces.controllers";
 
 import {
   IEndpointFieldFullDTO,
   IFieldDTO,
   IProductDTO,
 } from "./endpointField.dto";
-
-interface IRequestHeaderDTO {
-  userId: string;
-}
-const RequestHeaderDTO = Joi.object<IRequestHeaderDTO, true>({
-  userId: AddressValidation.required(),
-});
 
 interface IRequestParamsDTO {
   endpointId: string;
@@ -37,9 +32,7 @@ interface ResponseDTO {
 }
 
 const getEndpointFields = async (req: Request, res: Response) => {
-  const { userId }: IRequestHeaderDTO = await RequestHeaderDTO.validateAsync(
-    req?.headers
-  );
+  const { user_id } = await validateUser(req);
   const { endpointId }: IRequestParamsDTO =
     await RequestParamsDTO.validateAsync(req?.params);
 
@@ -48,7 +41,7 @@ const getEndpointFields = async (req: Request, res: Response) => {
     const endpointFields = (
       await EndpointField.findAll({
         where: {
-          // userId: userId,
+          // userId: user_id,
           endpointId,
         },
       })

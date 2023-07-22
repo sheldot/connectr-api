@@ -123,24 +123,32 @@ export const MiscFieldNames = {
 // TOKEN DETAILS
 
 export enum TokenProductEnum {
+  BUSD = "BUSD",
   DAI = "DAI",
-  ETH = "ETH",
-  MATIC = "MATIC",
-  RETH = "RETH",
-  STETH = "STETH",
   USDC = "USDC",
   USDT = "USDT",
+
+  CBETH = "CBETH",
+  RETH = "RETH",
+  STETH = "STETH",
+
+  WETH = "WETH",
+  MATIC = "MATIC",
   WBTC = "WBTC",
 }
 
 export const TokenProductNames = {
+  [TokenProductEnum.BUSD]: "BUSD",
   [TokenProductEnum.DAI]: "DAI",
-  [TokenProductEnum.ETH]: "Ether",
-  [TokenProductEnum.MATIC]: "Polygon MATIC",
-  [TokenProductEnum.RETH]: "RocketPool rETH",
-  [TokenProductEnum.STETH]: "Lido stETH",
   [TokenProductEnum.USDC]: "USD Coin",
   [TokenProductEnum.USDT]: "USDT",
+
+  [TokenProductEnum.CBETH]: "Coinbase Wrapped Staked ETH",
+  [TokenProductEnum.RETH]: "RocketPool rETH",
+  [TokenProductEnum.STETH]: "Lido stETH",
+
+  [TokenProductEnum.WETH]: "Wrapped Ether",
+  [TokenProductEnum.MATIC]: "Polygon MATIC",
   [TokenProductEnum.WBTC]: "Wrapped Bitcoin",
 };
 
