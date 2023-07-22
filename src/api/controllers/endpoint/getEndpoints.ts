@@ -1,10 +1,11 @@
 import { Request, Response } from "express";
+import Joi from "joi";
 
 import Endpoint from "src/db/models/Endpoint.model";
-
-import { IEndpointDTO } from "./endpoint.dto";
 import { SUCCESS_CODE, respondSuccess } from "src/utils/responseManager.util";
 import { AddressValidation } from "src/utils/validation.util";
+
+import { IEndpointDTO } from "./endpoint.dto";
 
 interface IRequestHeaderDTO {
   userId: string;

@@ -1,9 +1,8 @@
 import { Request, Response } from "express";
+import Joi from "joi";
 
 import EndpointField from "src/db/models/EndpointField.model";
 import Field from "src/db/models/Field.model";
-
-import { IEndpointFieldDTO, IFieldDTO, IProductDTO } from "./endpointField.dto";
 import Product from "src/db/models/Product.model";
 import {
   ERROR_CODE,
@@ -11,8 +10,9 @@ import {
   respondError,
   respondSuccess,
 } from "src/utils/responseManager.util";
-import Joi from "joi";
 import { AddressValidation, UuidValidation } from "src/utils/validation.util";
+
+import { IEndpointFieldDTO, IFieldDTO, IProductDTO } from "./endpointField.dto";
 
 interface IRequestHeaderDTO {
   userId: string;

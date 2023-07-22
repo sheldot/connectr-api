@@ -1,16 +1,16 @@
 import { Request, Response } from "express";
+import Joi from "joi";
 
 import User from "src/db/models/User.model";
-
-import { IUserDTO } from "./user.dto";
 import {
   ERROR_CODE,
   SUCCESS_CODE,
   respondError,
   respondSuccess,
 } from "src/utils/responseManager.util";
-import Joi from "joi";
 import { AddressValidation } from "src/utils/validation.util";
+
+import { IUserDTO } from "./user.dto";
 
 interface IRequestParamsDTO {
   userAddress: string;

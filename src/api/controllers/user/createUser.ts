@@ -2,10 +2,10 @@ import { Request, Response } from "express";
 import Joi from "joi";
 
 import User from "src/db/models/User.model";
+import { SUCCESS_CODE, respondSuccess } from "src/utils/responseManager.util";
 import { AddressValidation } from "src/utils/validation.util";
 
 import { IUserDTO } from "./user.dto";
-import { SUCCESS_CODE, respondSuccess } from "src/utils/responseManager.util";
 
 interface IRequestBodyDTO {
   userAddress: string;
