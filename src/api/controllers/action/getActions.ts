@@ -26,12 +26,12 @@ interface ResponseDTO {
 }
 
 const getActions = async (req: Request, res: Response) => {
-  const { userAddress } = await validateUser(req);
+  const user = await validateUser(req, res);
 
   const { endpointId }: IRequestParamsDTO =
     await RequestParamsDTO.validateAsync(req?.params);
 
-  const endpoint = await Endpoint.getOneByUser(endpointId, userAddress);
+  const endpoint = await Endpoint.getOneByUser(endpointId, user.id);
 
   if (!endpoint) {
     return respondError(res, ERROR_CODE.NOT_FOUND, "Endpoint does not exist");

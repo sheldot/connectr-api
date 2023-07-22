@@ -85,18 +85,12 @@ export default class Endpoint extends Model<
 
   static async getOneByUser(
     id: string,
-    userAddress: string
+    userId: string
   ): Promise<IEndpointAttributes | null> {
-    const userObj = await User.getOneByAddress(userAddress);
-
-    if (!userObj) {
-      throw new Error("User not found");
-    }
-
     const endpoint = await this.findOne({
       where: {
         id,
-        userId: userObj.id,
+        userId,
       },
     });
 

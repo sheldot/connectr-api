@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import Joi from "joi";
 
+import Endpoint from "src/db/models/Endpoint.model";
 import EndpointField from "src/db/models/EndpointField.model";
 import Field from "src/db/models/Field.model";
 import Product from "src/db/models/Product.model";
@@ -32,16 +33,21 @@ interface ResponseDTO {
 }
 
 const getEndpointFields = async (req: Request, res: Response) => {
-  const { userAddress } = await validateUser(req);
+  const user = await validateUser(req, res);
   const { endpointId }: IRequestParamsDTO =
     await RequestParamsDTO.validateAsync(req?.params);
 
   try {
+    const endpoint = await Endpoint.getOneByUser(endpointId, user.id);
+
+    if (!endpoint) {
+      throw new Error("Endpoint does not exist");
+    }
+
     const endpointFieldIds: any[] = [];
     const endpointFields = (
       await EndpointField.findAll({
         where: {
-          // userId: user_id,
           endpointId,
         },
       })

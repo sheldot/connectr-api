@@ -60,13 +60,7 @@ interface ResponseDTO {
 }
 
 const createEndpoint = async (req: Request, res: Response) => {
-  const { user_id } = await validateUser(req);
-
-  const user = await User.getOneByAddress(user_id);
-
-  if (!user) {
-    return respondError(res, ERROR_CODE.NOT_FOUND, "User does not exist");
-  }
+  const user = await validateUser(req, res);
 
   const { name: endpointName, fieldsToCreate }: IRequestBodyDTO =
     await RequestBodyDTO.validateAsync(req?.body);

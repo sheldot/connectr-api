@@ -11,12 +11,12 @@ interface ResponseDTO {
 }
 
 const getEndpoints = async (req: Request, res: Response) => {
-  const { user_id } = await validateUser(req);
+  const user = await validateUser(req, res);
 
   const endpoints = (
     await Endpoint.findAll({
       where: {
-        userId: user_id,
+        userId: user.id,
       },
     })
   ).map((a) => a.toJSON());
