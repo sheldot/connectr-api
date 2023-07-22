@@ -24,6 +24,18 @@ export interface IEndpointFieldDTO {
   // References
   endpointId: string;
   fieldId: string;
+}
+
+export interface IEndpointFieldFullDTO {
+  createdAt: string;
+  deletedAt?: string;
+  updatedAt: string;
+
+  id: string;
+
+  // References
+  endpointId: string;
+  fieldId: string;
 
   // filled in
   field: IFieldDTO;

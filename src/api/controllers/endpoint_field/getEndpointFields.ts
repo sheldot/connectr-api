@@ -12,7 +12,11 @@ import {
 } from "src/utils/responseManager.util";
 import { AddressValidation, UuidValidation } from "src/utils/validation.util";
 
-import { IEndpointFieldDTO, IFieldDTO, IProductDTO } from "./endpointField.dto";
+import {
+  IEndpointFieldFullDTO,
+  IFieldDTO,
+  IProductDTO,
+} from "./endpointField.dto";
 
 interface IRequestHeaderDTO {
   userId: string;
@@ -29,7 +33,7 @@ const RequestParamsDTO = Joi.object<IRequestParamsDTO, true>({
 });
 
 interface ResponseDTO {
-  endpointFields: IEndpointFieldDTO[];
+  endpointFields: IEndpointFieldFullDTO[];
 }
 
 const getEndpointFields = async (req: Request, res: Response) => {

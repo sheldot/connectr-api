@@ -1,3 +1,9 @@
+export enum OperatorEnum {
+  GREATER_THAN = "GREATER_THAN",
+  LESS_THAN = "LESS_THAN",
+  EQUALS = "EQUALS",
+}
+
 export enum SourceEnum {
   ETHERSCAN = "ETHERSCAN",
   DEFI_LLAMA = "DEFI_LLAMA",

@@ -82,4 +82,15 @@ export default class Endpoint extends Model<
 
     return endpoint ? endpoint.toJSON() : null;
   }
+
+  static async validateAndCreate(
+    createdEndpointAttributes: IEndpointCreationAttributes
+  ): Promise<IEndpointAttributes> {
+    const validatedEndpointAttributes =
+      await EndpointCreationAttributesSchema.validateAsync(
+        createdEndpointAttributes
+      );
+
+    return (await this.create(validatedEndpointAttributes)).toJSON();
+  }
 }

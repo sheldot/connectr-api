@@ -2,6 +2,7 @@ import Joi from "joi";
 
 import {
   FieldEnumSet,
+  OperatorEnum,
   ProductEnumSet,
   SourceEnum,
   TokenProductEnum,
@@ -16,6 +17,10 @@ export const AddressValidation = Joi.string()
 
 export const FieldValidation = Joi.string().valid(
   ...Object.values(FieldEnumSet)
+);
+
+export const OperatorValidation = Joi.string().valid(
+  ...Object.values(OperatorEnum)
 );
 
 export const ProductValidation = Joi.string().valid(

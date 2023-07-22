@@ -85,4 +85,15 @@ export default class EndpointField extends Model<
 
     return endpointField ? endpointField.toJSON() : null;
   }
+
+  static async validateAndCreate(
+    createdEndpointFieldAttributes: IEndpointFieldCreationAttributes
+  ): Promise<IEndpointFieldAttributes> {
+    const validatedEndpointFieldAttributes =
+      await EndpointFieldCreationAttributesSchema.validateAsync(
+        createdEndpointFieldAttributes
+      );
+
+    return (await this.create(validatedEndpointFieldAttributes)).toJSON();
+  }
 }
