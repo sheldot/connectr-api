@@ -12,7 +12,7 @@ const coreRouter = () => {
 
   appRouter.get("/ping", ping);
 
-  appRouter.use("/api/:apiId/fields", apiFieldsRouter);
+  appRouter.use("/api", apiFieldsRouter);
   appRouter.use("/api", apiRouter);
 
   return appRouter;

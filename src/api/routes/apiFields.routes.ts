@@ -1,10 +1,10 @@
 import { Router } from "express";
 
-import getApis from "../controllers/api/getApis";
+import getApiFields from "../controllers/api_field/getApiFields";
 
 const apiRouter = Router();
 
-apiRouter.get("/", getApis);
+apiRouter.get("/:apiId/fields", getApiFields);
 
 // apiRouter.post("/", createApi);
 
