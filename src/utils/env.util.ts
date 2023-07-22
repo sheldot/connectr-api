@@ -31,7 +31,7 @@ interface IEnvConfig {
   db: IDatabaseConfig;
 }
 
-const isProd = process.env.NODE_ENV === "pro";
+const isProd = process.env.INTERNAL_NODE_ENV === "pro";
 
 const configSet: IEnvConfig = {
   env: "development",
@@ -73,9 +73,7 @@ const configSet: IEnvConfig = {
       (isProd
         ? process.env.PROD_APP_BASE_URL
         : process.env.LOCAL_APP_BASE_URL) || "",
-    port:
-      (isProd ? process.env.PROD_SERVER_PORT : process.env.LOCAL_SERVER_PORT) ||
-      "",
+    port: (isProd ? process.env.PORT : process.env.LOCAL_SERVER_PORT) || "",
   },
 };
 
