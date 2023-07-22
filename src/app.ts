@@ -11,6 +11,17 @@ import env from "./utils/env.util";
 
 const app = express();
 
+// import { v4 as genUuid } from "uuid";
+
+// console.log(genUuid());
+// console.log(genUuid());
+// console.log(genUuid());
+// console.log(genUuid());
+// console.log(genUuid());
+// console.log(genUuid());
+// console.log(genUuid());
+// console.log(genUuid());
+
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json({ limit: "5mb" }));

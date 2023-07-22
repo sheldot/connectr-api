@@ -77,8 +77,8 @@ const getEndpointFields = async (req: Request, res: Response) => {
     ).map((a) => a.toJSON());
 
     const productMap: Record<string, IProductDTO> = {};
-    products.forEach(({ id, productNameEnum, sourceId }) => {
-      productMap[id] = { productNameEnum, sourceId };
+    products.forEach(({ id, productNameEnum, productTypeEnum, sourceId }) => {
+      productMap[id] = { productNameEnum, productTypeEnum, sourceId };
     });
 
     const response: ResponseDTO = {

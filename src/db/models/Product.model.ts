@@ -11,21 +11,39 @@ import {
   Table,
 } from "sequelize-typescript";
 
-import { ProductValidation, UuidValidation } from "../../utils/validation.util";
-import { ProductEnum } from "../../utils/enum.util";
+import {
+  ProductTypeValidation,
+  ProductValidation,
+  UuidValidation,
+} from "../../utils/validation.util";
+import {
+  DexProductEnum,
+  LendingProductEnum,
+  MiscProductEnum,
+  ProductTypeEnum,
+  TokenProductEnum,
+} from "../../utils/enum.util";
 
 import { IBaseAttributes } from "../IBaseAttributes";
 import Source from "./Source.model";
 
 export interface IProductCreationAttributes {
-  productNameEnum: ProductEnum;
+  productNameEnum:
+    | DexProductEnum
+    | LendingProductEnum
+    | MiscProductEnum
+    | TokenProductEnum;
+  productTypeEnum: ProductTypeEnum;
 
   // References
   sourceId: string;
 }
 
 export type IProductUpdatingAttributes = Partial<
-  Pick<IProductCreationAttributes, "productNameEnum" | "sourceId">
+  Pick<
+    IProductCreationAttributes,
+    "productNameEnum" | "productTypeEnum" | "sourceId"
+  >
 >;
 
 export interface IProductAttributes
@@ -36,6 +54,7 @@ export const ProductCreationAttributesSchema =
   Joi.object<IProductCreationAttributes>({
     // Variables
     productNameEnum: ProductValidation.required(),
+    productTypeEnum: ProductTypeValidation.required(),
 
     // References
     sourceId: UuidValidation.required(),
@@ -61,6 +80,10 @@ export default class Product extends Model<
   @Column(DataType.STRING)
   productNameEnum!: string;
 
+  @AllowNull(false)
+  @Column(DataType.STRING)
+  productTypeEnum!: string;
+
   @BelongsTo(() => Source, {
     foreignKey: { name: "sourceId", allowNull: false },
     as: "source",
@@ -82,7 +105,11 @@ export default class Product extends Model<
   }
 
   static async getOneByName(
-    productName: ProductEnum
+    productName:
+      | DexProductEnum
+      | LendingProductEnum
+      | MiscProductEnum
+      | TokenProductEnum
   ): Promise<IProductAttributes | null> {
     const product = await this.findOne({
       where: {

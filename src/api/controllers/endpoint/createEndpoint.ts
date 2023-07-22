@@ -4,7 +4,16 @@ import Joi from "joi";
 import Endpoint from "src/db/models/Endpoint.model";
 import EndpointField from "src/db/models/EndpointField.model";
 import User from "src/db/models/User.model";
-import { FieldEnum, ProductEnum } from "src/utils/enum.util";
+import {
+  DexFieldEnum,
+  DexProductEnum,
+  LendingFieldEnum,
+  LendingProductEnum,
+  MiscFieldEnum,
+  MiscProductEnum,
+  TokenFieldEnum,
+  TokenProductEnum,
+} from "src/utils/enum.util";
 import {
   ERROR_CODE,
   SUCCESS_CODE,
@@ -21,8 +30,16 @@ import { IEndpointWithFieldsDTO } from "./endpoint.dto";
 import { validateUser } from "../interfaces.controllers";
 
 interface IApiFieldSet {
-  fieldNameEnum: FieldEnum;
-  productNameEnum: ProductEnum;
+  fieldNameEnum:
+    | DexFieldEnum
+    | LendingFieldEnum
+    | MiscFieldEnum
+    | TokenFieldEnum;
+  productNameEnum:
+    | DexProductEnum
+    | LendingProductEnum
+    | MiscProductEnum
+    | TokenProductEnum;
 }
 const ApiFieldSetDTO = Joi.object<IApiFieldSet, true>({
   fieldNameEnum: FieldValidation.required(),

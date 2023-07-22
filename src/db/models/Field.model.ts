@@ -12,13 +12,26 @@ import {
 } from "sequelize-typescript";
 
 import { FieldValidation, UuidValidation } from "../../utils/validation.util";
-import { FieldEnum, ProductEnum } from "../../utils/enum.util";
+import {
+  DexFieldEnum,
+  DexProductEnum,
+  LendingFieldEnum,
+  LendingProductEnum,
+  MiscFieldEnum,
+  MiscProductEnum,
+  TokenFieldEnum,
+  TokenProductEnum,
+} from "../../utils/enum.util";
 
 import { IBaseAttributes } from "../IBaseAttributes";
 import Product from "./Product.model";
 
 export interface IFieldCreationAttributes {
-  fieldNameEnum: FieldEnum;
+  fieldNameEnum:
+    | DexFieldEnum
+    | LendingFieldEnum
+    | MiscFieldEnum
+    | TokenFieldEnum;
 
   // References
   productId: string;
@@ -82,8 +95,12 @@ export default class Field extends Model<
   }
 
   static async getOneByName(
-    productName: ProductEnum,
-    fieldName: FieldEnum
+    productName:
+      | DexProductEnum
+      | LendingProductEnum
+      | MiscProductEnum
+      | TokenProductEnum,
+    fieldName: DexFieldEnum | LendingFieldEnum | MiscFieldEnum | TokenFieldEnum
   ): Promise<IFieldAttributes | null> {
     const productObj = await Product.getOneByName(productName);
 

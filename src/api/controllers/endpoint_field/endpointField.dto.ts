@@ -1,14 +1,33 @@
-import { FieldEnum, ProductEnum } from "src/utils/enum.util";
+import {
+  DexFieldEnum,
+  DexProductEnum,
+  LendingFieldEnum,
+  LendingProductEnum,
+  MiscFieldEnum,
+  MiscProductEnum,
+  ProductTypeEnum,
+  TokenFieldEnum,
+  TokenProductEnum,
+} from "src/utils/enum.util";
 
 export interface IProductDTO {
-  productNameEnum: ProductEnum;
+  productNameEnum:
+    | DexProductEnum
+    | LendingProductEnum
+    | MiscProductEnum
+    | TokenProductEnum;
+  productTypeEnum: ProductTypeEnum;
 
   // References
   sourceId: string;
 }
 
 export interface IFieldDTO {
-  fieldNameEnum: FieldEnum;
+  fieldNameEnum:
+    | DexFieldEnum
+    | LendingFieldEnum
+    | MiscFieldEnum
+    | TokenFieldEnum;
 
   // References
   productId: string;

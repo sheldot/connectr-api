@@ -3,13 +3,12 @@ import Joi from "joi";
 import {
   DexFieldEnum,
   DexProductEnum,
-  // FieldEnumSet,
   LendingFieldEnum,
   LendingProductEnum,
   MiscFieldEnum,
   MiscProductEnum,
   OperatorEnum,
-  // ProductEnumSet,
+  ProductTypeEnum,
   SourceEnum,
   TokenFieldEnum,
   TokenProductEnum,
@@ -38,6 +37,10 @@ export const ProductValidation = Joi.string().valid(
   ...Object.values(LendingProductEnum),
   ...Object.values(MiscProductEnum),
   ...Object.values(TokenProductEnum)
+);
+
+export const ProductTypeValidation = Joi.string().valid(
+  ...Object.values(ProductTypeEnum)
 );
 
 export const SourceValidation = Joi.string().valid(

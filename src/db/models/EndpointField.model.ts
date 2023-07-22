@@ -11,7 +11,16 @@ import {
   Table,
 } from "sequelize-typescript";
 
-import { FieldEnum, ProductEnum } from "src/utils/enum.util";
+import {
+  DexFieldEnum,
+  DexProductEnum,
+  LendingFieldEnum,
+  LendingProductEnum,
+  MiscFieldEnum,
+  MiscProductEnum,
+  TokenFieldEnum,
+  TokenProductEnum,
+} from "src/utils/enum.util";
 
 import {
   FieldValidation,
@@ -43,8 +52,12 @@ export const EndpointFieldCreationAttributesSchema =
     );
 
 export interface IEndpointFieldCreationByNameAttributes {
-  fieldName: FieldEnum;
-  productName: ProductEnum;
+  fieldName: DexFieldEnum | LendingFieldEnum | MiscFieldEnum | TokenFieldEnum;
+  productName:
+    | DexProductEnum
+    | LendingProductEnum
+    | MiscProductEnum
+    | TokenProductEnum;
 
   // References
   endpointId: string;

@@ -10,6 +10,13 @@ export enum SourceEnum {
   SUBGRAPH = "SUBGRAPH",
 }
 
+export enum ProductTypeEnum {
+  DEX = "DEX",
+  LENDING = "LENDING",
+  MISC = "MISC",
+  TOKEN = "TOKEN",
+}
+
 // DEX DETAILS
 
 export enum DexProductEnum {
@@ -162,18 +169,18 @@ export const TokenFieldNames = {
   [TokenFieldEnum.CIRCULATING_TOKEN_VOLUME]: "Amount of tokens in circulation",
 };
 
-export const ProductEnumSet = {
-  ...DexProductEnum,
-  ...LendingProductEnum,
-  ...MiscProductEnum,
-  ...TokenProductEnum,
-};
-export type ProductEnum = typeof ProductEnumSet;
+// export const ProductEnumSet = {
+//   ...DexProductEnum,
+//   ...LendingProductEnum,
+//   ...MiscProductEnum,
+//   ...TokenProductEnum,
+// };
+// export type ProductEnum = typeof ProductEnumSet;
 
-export const FieldEnumSet = {
-  ...DexFieldEnum,
-  ...LendingFieldEnum,
-  ...MiscFieldEnum,
-  ...TokenFieldEnum,
-};
-export type FieldEnum = typeof FieldEnumSet;
+// export const FieldEnumSet = {
+//   ...DexFieldEnum,
+//   ...LendingFieldEnum,
+//   ...MiscFieldEnum,
+//   ...TokenFieldEnum,
+// };
+// export type FieldEnum = typeof FieldEnumSet;

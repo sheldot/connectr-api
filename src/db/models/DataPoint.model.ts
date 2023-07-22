@@ -18,9 +18,14 @@ import {
   TokenProductValidation,
 } from "../../utils/validation.util";
 import {
-  FieldEnum,
-  ProductEnum,
+  DexFieldEnum,
+  DexProductEnum,
+  LendingFieldEnum,
+  LendingProductEnum,
+  MiscFieldEnum,
+  MiscProductEnum,
   SourceEnum,
+  TokenFieldEnum,
   TokenProductEnum,
 } from "../../utils/enum.util";
 
@@ -33,8 +38,16 @@ export interface IDataPointCreationAttributes {
   value: string;
 
   sourceNameEnum: SourceEnum;
-  productNameEnum: ProductEnum;
-  fieldNameEnum: FieldEnum;
+  productNameEnum:
+    | DexProductEnum
+    | LendingProductEnum
+    | MiscProductEnum
+    | TokenProductEnum;
+  fieldNameEnum:
+    | DexFieldEnum
+    | LendingFieldEnum
+    | MiscFieldEnum
+    | TokenFieldEnum;
 
   token1: TokenProductEnum | null;
   token2: TokenProductEnum | null;
