@@ -6,7 +6,7 @@ const run = async () => {
   console.log(`Wakey wakey sunshine`);
   await syncDbModels();
 
-  const actions = await getAllActions();
+  const { actions } = await getAllActions();
   console.log("--- actions");
   console.log(actions);
 

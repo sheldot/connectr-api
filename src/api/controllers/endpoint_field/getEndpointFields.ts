@@ -56,19 +56,9 @@ const getEndpointFields = async (req: Request, res: Response) => {
       })
     ).map((a) => {
       const fieldElement = a.toJSON();
-      console.log("--- fieldElement");
-      console.log(fieldElement);
       endpointFieldIds.push(fieldElement.fieldId);
       return fieldElement;
     });
-
-    console.log("--- endpointFieldIds");
-    console.log(endpointFieldIds);
-
-    console.log("--- endpointId");
-    console.log(endpointId);
-    console.log("--- endpointFields");
-    console.log(endpointFields);
 
     // Get the fields
     const fields = (
@@ -84,8 +74,6 @@ const getEndpointFields = async (req: Request, res: Response) => {
     const fieldMap: Record<string, IFieldDTO> = {};
     fields.forEach(({ id, fieldNameEnum, productId }) => {
       fieldMap[id] = { fieldNameEnum, productId };
-      console.log("--- productId");
-      console.log(productId);
       productIds.push(productId);
     });
 
