@@ -41,6 +41,21 @@ const getEndpointFields = async (req: Request, res: Response) => {
     await RequestParamsDTO.validateAsync(req?.params);
 
   try {
+    const endpointFields = await getEndpointRawFields(user, endpointId);
+
+    const response: ResponseDTO = {
+      endpointFields,
+    };
+
+    return respondSuccess(res, SUCCESS_CODE.OK, response);
+  } catch (err) {
+    console.log(err);
+    return respondError(res, ERROR_CODE.INTERNAL_ERROR, JSON.stringify(err));
+  }
+};
+
+export const getEndpointRawFields = async (user: any, endpointId: string) => {
+  try {
     const endpoint = await Endpoint.getOneByUser(endpointId, user.id);
 
     if (!endpoint) {
@@ -112,26 +127,21 @@ const getEndpointFields = async (req: Request, res: Response) => {
       sourceMap[id] = sourceNameEnum;
     });
 
-    const response: ResponseDTO = {
-      endpointFields: endpointFields.map(
-        ({ createdAt, deletedAt, updatedAt, id, endpointId, fieldId }) => ({
-          createdAt: createdAt.toISOString(),
-          deletedAt: deletedAt?.toISOString(),
-          updatedAt: updatedAt.toISOString(),
-          id,
-          endpointId,
-          fieldId,
-          field: fieldMap[fieldId],
-          product: productMap[fieldMap[fieldId].productId],
-          source: sourceMap[productMap[fieldMap[fieldId].productId].sourceId],
-        })
-      ),
-    };
-
-    return respondSuccess(res, SUCCESS_CODE.OK, response);
+    return endpointFields.map(
+      ({ createdAt, deletedAt, updatedAt, id, endpointId, fieldId }) => ({
+        createdAt: createdAt.toISOString(),
+        deletedAt: deletedAt?.toISOString(),
+        updatedAt: updatedAt.toISOString(),
+        id,
+        endpointId,
+        fieldId,
+        field: fieldMap[fieldId],
+        product: productMap[fieldMap[fieldId].productId],
+        source: sourceMap[productMap[fieldMap[fieldId].productId].sourceId],
+      })
+    );
   } catch (err) {
-    console.log(err);
-    return respondError(res, ERROR_CODE.INTERNAL_ERROR, JSON.stringify(err));
+    throw new Error(JSON.stringify(err));
   }
 };
 

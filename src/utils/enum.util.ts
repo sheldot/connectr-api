@@ -17,7 +17,7 @@ export enum ProductTypeEnum {
 export enum DexProductEnum {
   // BALANCER = "BALANCER",
   CURVE = "CURVE",
-  // PANCAKESWAP = "PANCAKESWAP",
+  PANCAKESWAP = "PANCAKESWAP",
   SUSHISWAP = "SUSHISWAP",
   // UNISWAP_V2 = "UNISWAP_V2",
   UNISWAP_V3 = "UNISWAP_V3",
@@ -26,7 +26,7 @@ export enum DexProductEnum {
 export const DexProductNames = {
   // [DexProductEnum.BALANCER]: "Balancer",
   [DexProductEnum.CURVE]: "Curve",
-  // [DexProductEnum.PANCAKESWAP]: "Pancake Swap",
+  [DexProductEnum.PANCAKESWAP]: "Pancake Swap",
   [DexProductEnum.SUSHISWAP]: "Sushi Swap",
   // [DexProductEnum.UNISWAP_V2]: "Uniswap V2",
   [DexProductEnum.UNISWAP_V3]: "Uniswap V3",
