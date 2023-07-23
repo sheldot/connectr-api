@@ -13,13 +13,14 @@ import {
 import { validateUser } from "../interfaces.controllers";
 import { IActionDTO } from "./action.dto";
 import { UuidValidation } from "src/utils/validation.util";
+import { Op } from "sequelize";
 
-interface IRequestParamsDTO {
-  endpointId: string;
-}
-const RequestParamsDTO = Joi.object<IRequestParamsDTO, true>({
-  endpointId: UuidValidation.required(),
-});
+// interface IRequestParamsDTO {
+//   endpointId: string;
+// }
+// const RequestParamsDTO = Joi.object<IRequestParamsDTO, true>({
+//   endpointId: UuidValidation.required(),
+// });
 
 interface ResponseDTO {
   actions: IActionDTO[];
@@ -28,19 +29,32 @@ interface ResponseDTO {
 const getActions = async (req: Request, res: Response) => {
   const user = await validateUser(req, res);
 
-  const { endpointId }: IRequestParamsDTO =
-    await RequestParamsDTO.validateAsync(req?.params);
+  // const { endpointId }: IRequestParamsDTO =
+  //   await RequestParamsDTO.validateAsync(req?.params);
 
-  const endpoint = await Endpoint.getOneByUser(endpointId, user.id);
+  // const endpoint = await Endpoint.getOneByUser(endpointId, user.id);
 
-  if (!endpoint) {
-    return respondError(res, ERROR_CODE.NOT_FOUND, "Endpoint does not exist");
-  }
+  // if (!endpoint) {
+  //   return respondError(res, ERROR_CODE.NOT_FOUND, "Endpoint does not exist");
+  // }
+
+  const endpointIds: any[] = [];
+  const endpoints = (
+    await Endpoint.findAll({
+      where: {
+        userId: user.id,
+      },
+    })
+  ).map((a) => {
+    const endpointObj = a.toJSON();
+    endpointIds.push(endpointObj.id);
+    return endpointObj;
+  });
 
   const actions = (
     await Action.findAll({
       where: {
-        endpointId: endpoint.id,
+        endpointId: { [Op.in]: endpointIds },
       },
     })
   ).map((a) => a.toJSON());

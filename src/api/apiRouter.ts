@@ -17,7 +17,7 @@ const coreRouter = () => {
   appRouter.get("/ping", ping);
   appRouter.use("/misc", miscRouter);
 
-  appRouter.use("/endpoints", actionRouter);
+  appRouter.use("/", actionRouter);
   appRouter.use("/endpoints", endpointFieldsRouter);
   appRouter.use("/endpoints", endpointRouter);
   appRouter.use("/users", userRouter);

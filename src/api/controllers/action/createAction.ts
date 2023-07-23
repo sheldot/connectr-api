@@ -30,6 +30,7 @@ import {
 
 import { IActionDTO } from "./action.dto";
 import { validateUser } from "../interfaces.controllers";
+import EndpointField from "src/db/models/EndpointField.model";
 
 interface IRequestBodyDTO {
   actionType: ActionTypeEnum;
@@ -38,16 +39,7 @@ interface IRequestBodyDTO {
   name: string;
   operator: OperatorEnum;
   threshold: string;
-  fieldNameEnum:
-    | DexFieldEnum
-    | LendingFieldEnum
-    | MiscFieldEnum
-    | TokenFieldEnum;
-  productNameEnum:
-    | DexProductEnum
-    | LendingProductEnum
-    | MiscProductEnum
-    | TokenProductEnum;
+  fieldId: string;
 }
 const RequestBodyDTO = Joi.object<IRequestBodyDTO, true>({
   actionType: ActionTypeValidation.required(),
@@ -56,8 +48,7 @@ const RequestBodyDTO = Joi.object<IRequestBodyDTO, true>({
   name: SimpleStringValidation.required(),
   operator: OperatorValidation.required(),
   threshold: SimpleStringValidation.required(),
-  fieldNameEnum: FieldValidation.required(),
-  productNameEnum: ProductValidation.required(),
+  fieldId: UuidValidation.required(),
 });
 
 interface IRequestParamsDTO {
@@ -83,8 +74,7 @@ const createAction = async (req: Request, res: Response) => {
     name,
     operator,
     threshold,
-    fieldNameEnum,
-    productNameEnum,
+    fieldId,
   }: IRequestBodyDTO = await RequestBodyDTO.validateAsync(req?.body);
 
   const endpoint = await Endpoint.getOneByUser(endpointId, user.id);
@@ -93,7 +83,13 @@ const createAction = async (req: Request, res: Response) => {
     throw new Error("Endpoint does not exist");
   }
 
-  const fieldObj = await Field.getOneByName(productNameEnum, fieldNameEnum);
+  const endpointFieldObj = await EndpointField.getOneById(fieldId);
+
+  if (!endpointFieldObj) {
+    throw new Error("Field not found");
+  }
+
+  const fieldObj = await Field.getOneById(endpointFieldObj.fieldId);
 
   if (!fieldObj) {
     throw new Error("Field not found");

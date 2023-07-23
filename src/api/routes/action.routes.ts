@@ -5,8 +5,8 @@ import getActions from "../controllers/action/getActions";
 
 const actionRouter = Router();
 
-actionRouter.get("/:endpointId/actions", getActions);
+actionRouter.get("/actions", getActions);
 
-actionRouter.post("/:endpointId/actions", createAction);
+actionRouter.post("/endpoints/:endpointId/actions", createAction);
 
 export default actionRouter;
