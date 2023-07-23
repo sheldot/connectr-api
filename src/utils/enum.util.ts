@@ -1,4 +1,5 @@
 export enum SourceEnum {
+  AIRSTACK = "AIRSTACK",
   ETHERSCAN = "ETHERSCAN",
   DEFI_LLAMA = "DEFI_LLAMA",
   SUBGRAPH = "SUBGRAPH",
@@ -180,6 +181,16 @@ export interface ISwap {
   [ISwapEnum.tokenIn]: TokenProductEnum;
   [ISwapEnum.tokenOut]: TokenProductEnum;
 }
+const checks = {
+  string: (variable: any) => typeof variable === "string",
+  token: (variable: any) => Object.values(TokenProductEnum).includes(variable),
+};
+
+export const swapChecks: Record<ISwapEnum, Function> = {
+  [ISwapEnum.amount]: checks.string,
+  [ISwapEnum.tokenIn]: checks.token,
+  [ISwapEnum.tokenOut]: checks.token,
+};
 
 export enum ITransferEnum {
   "amount" = "amount",
@@ -190,17 +201,31 @@ export interface ITransfer {
   [ITransferEnum.token]: string;
 }
 
-const checkAllFields = (keyEnums: any, obj: any) =>
+export const transferChecks: Record<ITransferEnum, Function> = {
+  [ITransferEnum.amount]: checks.string,
+  [ITransferEnum.token]: checks.token,
+};
+
+export const checkerSet: Record<
+  ActionTypeEnum,
+  Record<ISwapEnum, Function> | Record<ITransferEnum, Function>
+> = {
+  [ActionTypeEnum.SWAP]: swapChecks,
+  [ActionTypeEnum.TRANSFER]: transferChecks,
+};
+
+const checkAllFields = (actionType: ActionTypeEnum, keyEnums: any, obj: any) =>
   Object.keys(keyEnums).reduce(
-    (previous, current) => previous && current in obj, //&& typeof obj[current] === ITransfer[current],
+    (previous, currentKey) => previous && currentKey in obj, //&&
+    // checkerSet[actionType][currentKey](obj[currentKey]),
     true
   );
 
 export const checkActionTypePayload = {
   [ActionTypeEnum.SWAP]: (obj: any): obj is ISwap =>
-    checkAllFields(ISwapEnum, obj),
+    checkAllFields(ActionTypeEnum.SWAP, ISwapEnum, obj),
   [ActionTypeEnum.TRANSFER]: (obj: any): obj is ITransfer =>
-    checkAllFields(ITransferEnum, obj),
+    checkAllFields(ActionTypeEnum.TRANSFER, ITransferEnum, obj),
 };
 
 export enum OperatorEnum {

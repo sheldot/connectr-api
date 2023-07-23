@@ -20,6 +20,9 @@ import {
   IFieldDTO,
   IProductDTO,
 } from "./endpointField.dto";
+import { Op } from "sequelize";
+import Source from "src/db/models/Source.model";
+import { SourceEnum } from "src/utils/enum.util";
 
 interface IRequestParamsDTO {
   endpointId: string;
@@ -52,15 +55,26 @@ const getEndpointFields = async (req: Request, res: Response) => {
         },
       })
     ).map((a) => {
-      endpointFieldIds.push(a.id);
-      return a.toJSON();
+      const fieldElement = a.toJSON();
+      console.log("--- fieldElement");
+      console.log(fieldElement);
+      endpointFieldIds.push(fieldElement.fieldId);
+      return fieldElement;
     });
+
+    console.log("--- endpointFieldIds");
+    console.log(endpointFieldIds);
+
+    console.log("--- endpointId");
+    console.log(endpointId);
+    console.log("--- endpointFields");
+    console.log(endpointFields);
 
     // Get the fields
     const fields = (
       await Field.findAll({
         where: {
-          id: { $in: endpointFieldIds },
+          id: { [Op.in]: endpointFieldIds },
         },
       })
     ).map((a) => a.toJSON());
@@ -70,21 +84,44 @@ const getEndpointFields = async (req: Request, res: Response) => {
     const fieldMap: Record<string, IFieldDTO> = {};
     fields.forEach(({ id, fieldNameEnum, productId }) => {
       fieldMap[id] = { fieldNameEnum, productId };
+      console.log("--- productId");
+      console.log(productId);
       productIds.push(productId);
     });
 
     // Get the products
+    const sourceIds: any[] = [];
     const products = (
       await Product.findAll({
         where: {
-          id: { $in: productIds },
+          id: { [Op.in]: productIds },
         },
       })
-    ).map((a) => a.toJSON());
+    ).map((a) => {
+      const productElement = a.toJSON();
+
+      sourceIds.push(productElement.sourceId);
+
+      return productElement;
+    });
 
     const productMap: Record<string, IProductDTO> = {};
     products.forEach(({ id, productNameEnum, productTypeEnum, sourceId }) => {
       productMap[id] = { productNameEnum, productTypeEnum, sourceId };
+    });
+
+    // Get the sources
+    const sources = (
+      await Source.findAll({
+        where: {
+          id: { [Op.in]: sourceIds },
+        },
+      })
+    ).map((a) => a.toJSON());
+
+    const sourceMap: Record<string, SourceEnum> = {};
+    sources.forEach(({ id, sourceNameEnum }) => {
+      sourceMap[id] = sourceNameEnum;
     });
 
     const response: ResponseDTO = {
@@ -98,6 +135,7 @@ const getEndpointFields = async (req: Request, res: Response) => {
           fieldId,
           field: fieldMap[fieldId],
           product: productMap[fieldMap[fieldId].productId],
+          source: sourceMap[productMap[fieldMap[fieldId].productId].sourceId],
         })
       ),
     };

@@ -59,4 +59,5 @@ export interface IEndpointFieldFullDTO {
   // filled in
   field: IFieldDTO;
   product: IProductDTO;
+  source: string;
 }
