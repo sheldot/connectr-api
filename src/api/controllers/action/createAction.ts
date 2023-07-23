@@ -2,23 +2,34 @@ import { Request, Response } from "express";
 import Joi from "joi";
 
 import Action from "src/db/models/Action.model";
+import Endpoint from "src/db/models/Endpoint.model";
+import Field from "src/db/models/Field.model";
 import {
   ActionTypeEnum,
+  DexFieldEnum,
+  DexProductEnum,
+  LendingFieldEnum,
+  LendingProductEnum,
+  MiscFieldEnum,
+  MiscProductEnum,
   OperatorEnum,
+  TokenFieldEnum,
+  TokenProductEnum,
   checkActionTypePayload,
 } from "src/utils/enum.util";
 import { SUCCESS_CODE, respondSuccess } from "src/utils/responseManager.util";
 import {
   ActionTypeValidation,
   AddressValidation,
+  FieldValidation,
   OperatorValidation,
+  ProductValidation,
   SimpleStringValidation,
   UuidValidation,
 } from "src/utils/validation.util";
 
 import { IActionDTO } from "./action.dto";
 import { validateUser } from "../interfaces.controllers";
-import Endpoint from "src/db/models/Endpoint.model";
 
 interface IRequestBodyDTO {
   actionType: ActionTypeEnum;
@@ -27,6 +38,16 @@ interface IRequestBodyDTO {
   name: string;
   operator: OperatorEnum;
   threshold: string;
+  fieldNameEnum:
+    | DexFieldEnum
+    | LendingFieldEnum
+    | MiscFieldEnum
+    | TokenFieldEnum;
+  productNameEnum:
+    | DexProductEnum
+    | LendingProductEnum
+    | MiscProductEnum
+    | TokenProductEnum;
 }
 const RequestBodyDTO = Joi.object<IRequestBodyDTO, true>({
   actionType: ActionTypeValidation.required(),
@@ -35,6 +56,8 @@ const RequestBodyDTO = Joi.object<IRequestBodyDTO, true>({
   name: SimpleStringValidation.required(),
   operator: OperatorValidation.required(),
   threshold: SimpleStringValidation.required(),
+  fieldNameEnum: FieldValidation.required(),
+  productNameEnum: ProductValidation.required(),
 });
 
 interface IRequestParamsDTO {
@@ -60,12 +83,20 @@ const createAction = async (req: Request, res: Response) => {
     name,
     operator,
     threshold,
+    fieldNameEnum,
+    productNameEnum,
   }: IRequestBodyDTO = await RequestBodyDTO.validateAsync(req?.body);
 
   const endpoint = await Endpoint.getOneByUser(endpointId, user.id);
 
   if (!endpoint) {
     throw new Error("Endpoint does not exist");
+  }
+
+  const fieldObj = await Field.getOneByName(productNameEnum, fieldNameEnum);
+
+  if (!fieldObj) {
+    throw new Error("Field not found");
   }
 
   // Check that the action payload is valid for this action type
@@ -82,6 +113,7 @@ const createAction = async (req: Request, res: Response) => {
   }
 
   const createdAction = await Action.validateAndCreate({
+    fieldId: fieldObj.id,
     actionType,
     actionPayload,
     address,
@@ -107,6 +139,7 @@ const createAction = async (req: Request, res: Response) => {
       threshold: createdAction.threshold,
 
       endpointId: createdAction.endpointId,
+      fieldId: createdAction.fieldId,
     },
   };
 

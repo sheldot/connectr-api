@@ -23,6 +23,7 @@ import {
 import { IBaseAttributes } from "../IBaseAttributes";
 
 import Endpoint from "./Endpoint.model";
+import Field from "./Field.model";
 
 export interface IActionCreationAttributes {
   actionType: ActionTypeEnum;
@@ -34,6 +35,7 @@ export interface IActionCreationAttributes {
 
   // References
   endpointId: string;
+  fieldId: string;
 }
 
 export type IActionUpdatingAttributes = Partial<
@@ -46,6 +48,7 @@ export type IActionUpdatingAttributes = Partial<
     | "operator"
     | "threshold"
     | "endpointId"
+    | "fieldId"
   >
 >;
 
@@ -65,6 +68,7 @@ export const ActionCreationAttributesSchema =
 
     // References
     endpointId: UuidValidation.required(),
+    fieldId: UuidValidation.required(),
   })
     .meta({ className: "IActionCreationAttributes" })
     .description("The attributes for the creation of an action db object");
@@ -112,6 +116,12 @@ export default class Action extends Model<
     as: "endpoint",
   })
   endpointId!: Endpoint;
+
+  @BelongsTo(() => Field, {
+    foreignKey: { name: "fieldId", allowNull: false },
+    as: "field",
+  })
+  fieldId!: Field;
 
   static async getList(): Promise<IActionAttributes[]> {
     const queryParams: FindOptions<IActionAttributes> = {};

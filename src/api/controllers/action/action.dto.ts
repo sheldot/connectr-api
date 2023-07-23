@@ -16,4 +16,5 @@ export interface IActionDTO {
 
   // References
   endpointId: string;
+  fieldId: string;
 }

@@ -59,6 +59,7 @@ const getActions = async (req: Request, res: Response) => {
         operator,
         threshold,
         endpointId,
+        fieldId,
       }) => ({
         createdAt: createdAt.toISOString(),
         deletedAt: deletedAt?.toISOString(),
@@ -71,6 +72,7 @@ const getActions = async (req: Request, res: Response) => {
         operator,
         threshold,
         endpointId,
+        fieldId,
       })
     ),
   };
