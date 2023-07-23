@@ -10,6 +10,10 @@ const run = async () => {
   console.log("--- actions");
   console.log(actions);
 
+  // Pull data  for the past hour
+
+  // Check if a trigger has been hit
+
   return actions;
 };
 
