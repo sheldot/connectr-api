@@ -69,9 +69,6 @@ const createAction = async (req: Request, res: Response) => {
   }
 
   // Check that the action payload is valid for this action type
-  console.log("\n-=-=- actionPayload");
-  console.log(actionPayload);
-
   try {
     JSON.parse(actionPayload || "{}");
   } catch (e) {
@@ -79,14 +76,6 @@ const createAction = async (req: Request, res: Response) => {
   }
 
   const parsedActionPayload = JSON.parse(actionPayload || "{}");
-  console.log("\n-=-=- parsedActionPayload");
-  console.log(parsedActionPayload);
-  console.log(`\n-=-=- "type" in obj`);
-  console.log("type" in parsedActionPayload);
-  console.log(
-    "\n-=-=- checkActionTypePayload[actionType](parsedActionPayload)"
-  );
-  console.log(checkActionTypePayload[actionType](parsedActionPayload));
 
   if (!checkActionTypePayload[actionType](parsedActionPayload)) {
     throw new Error("Action payload does not match action type");

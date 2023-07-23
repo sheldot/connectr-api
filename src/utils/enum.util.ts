@@ -208,7 +208,8 @@ export const transferChecks: Record<ITransferEnum, Function> = {
 
 export const checkerSet: Record<
   ActionTypeEnum,
-  Record<ISwapEnum, Function> | Record<ITransferEnum, Function>
+  any
+  // Record<ISwapEnum, Function> | Record<ITransferEnum, Function>
 > = {
   [ActionTypeEnum.SWAP]: swapChecks,
   [ActionTypeEnum.TRANSFER]: transferChecks,
@@ -216,8 +217,10 @@ export const checkerSet: Record<
 
 const checkAllFields = (actionType: ActionTypeEnum, keyEnums: any, obj: any) =>
   Object.keys(keyEnums).reduce(
-    (previous, currentKey) => previous && currentKey in obj, //&&
-    // checkerSet[actionType][currentKey](obj[currentKey]),
+    (previous, currentKey: any) =>
+      previous &&
+      currentKey in obj &&
+      (checkerSet[actionType][currentKey] as any)(obj[currentKey]),
     true
   );
 
