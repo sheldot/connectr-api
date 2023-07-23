@@ -82,12 +82,8 @@ const createAction = async (req: Request, res: Response) => {
   if (!endpoint) {
     throw new Error("Endpoint does not exist");
   }
-  console.log("-=- endpointFieldId");
-  console.log(endpointFieldId);
 
   const endpointFieldObj = await EndpointField.getOneById(endpointFieldId);
-  console.log("-=- endpointFieldObj");
-  console.log(endpointFieldObj);
 
   if (!endpointFieldObj) {
     throw new Error("Field not found");
